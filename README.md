@@ -1,8 +1,6 @@
 # developer-assistant
 
-```bash
-. venv/Scripts/activate
-```
+## Installation
 - Clone the repository: git clone
 ```bash 
     https://github.com/abhishekmullur/developer-assistant
@@ -22,6 +20,7 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
+## Run
 - Run Streamlit
 ```bash
 streamlit run app.py
