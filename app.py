@@ -3,6 +3,9 @@ import vertexai
 from vertexai.preview.language_models import CodeGenerationModel, CodeChatModel, ChatModel, InputOutputTextPair
 import google.auth
 
+import requests
+import webbrowser
+
 # Google auth 
 credentials = google.auth.default()
 
@@ -70,7 +73,7 @@ with st.sidebar:
         'Deveroper Assistant')
     model = st.radio(
     "Try vertexaAI...",
-    ('Conversation','promt','Context'))
+    ('Conversation','promt','Context','API'))
     
     if model == 'Context':
         context = st.text_area('Context for the Model')
@@ -105,3 +108,40 @@ if prompt := st.chat_input():
 
     st.session_state.messages.append({"role": "assistant", "content": response.text})
     st.chat_message("assistant").write(response.text)
+
+if model == 'API':
+    # type input
+    typeInput = st.text_input("Enter type: ")
+
+    # destination input
+    destinationInput = st.text_input("Enter destination: ")
+
+    # Submit button
+    if typeInput and destinationInput:
+        if st.button("Submit"):
+            st.write("You submitted: ", typeInput, " and ", destinationInput)
+
+    # endpoint
+    url = "https://dummyjson.com/products/1"
+
+    # Data
+    data = {
+        "typeInput": typeInput,
+        "destinationInput": destinationInput
+    }   
+
+    # POST request
+    response = requests.post(url, data=data)
+
+    # API call
+    response = requests.get(url)
+    result = response.json()
+
+    # Check the response status code
+    if response.status_code == 200:
+        st.write("POST request was successful!")
+        st.write("Response content:", result)
+        if st.button("Open in New Tab"):
+            webbrowser.open_new_tab(result)
+    else:
+        st.write("POST request failed with status code:", response.status_code )
