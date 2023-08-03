@@ -2,7 +2,7 @@ import streamlit as st
 import vertexai
 from vertexai.preview.language_models import CodeGenerationModel, CodeChatModel, ChatModel, InputOutputTextPair
 import google.auth
-
+import json
 import requests
 import webbrowser
 
@@ -111,37 +111,33 @@ if prompt := st.chat_input():
 
 if model == 'API':
     # type input
-    typeInput = st.text_input("Enter type: ")
+    typeInput = st.text_input("Boilerplate name you want to download: ")
 
     # destination input
-    destinationInput = st.text_input("Enter destination: ")
+    destinationInput = st.text_input("Destination folder name: ")
 
     # Submit button
     if typeInput and destinationInput:
         if st.button("Submit"):
-            st.write("You submitted: ", typeInput, " and ", destinationInput)
+            st.write("Boilerplate ", typeInput, "will be setup at /", destinationInput)
 
-    # endpoint
-    url = "https://dummyjson.com/products/1"
+        # endpoint
+        url = "http://localhost:9091/v1/dragon/generateUrl"
 
-    # Data
-    data = {
-        "typeInput": typeInput,
-        "destinationInput": destinationInput
-    }   
+        # Data
+        data = {
+            'type': 'angular-login-register-dashboard-without-auth' or typeInput, 
+            'location': 'test-angular-2' or destinationInput
+        }   
 
-    # POST request
-    response = requests.post(url, data=data)
+        # # POST request
+        response = requests.post(url, json=data)
 
-    # API call
-    response = requests.get(url)
-    result = response.json()
-
-    # Check the response status code
-    if response.status_code == 200:
-        st.write("POST request was successful!")
-        st.write("Response content:", result)
-        if st.button("Open in New Tab"):
-            webbrowser.open_new_tab(result)
-    else:
-        st.write("POST request failed with status code:", response.status_code )
+        # Check the response status code
+        if response.status_code == 200:
+            print("POST request was successful!")
+            st.write("Your Application is Ready:", response.text)
+            if st.button("Open the app"):
+                webbrowser.open_new_tab(response.text)
+        else:
+            st.write("POST request failed with status code:", response.status_code)
