@@ -2,7 +2,6 @@ import streamlit as st
 import vertexai
 from vertexai.preview.language_models import CodeGenerationModel, CodeChatModel, ChatModel, InputOutputTextPair
 import google.auth
-import json
 import requests
 import webbrowser
 
@@ -76,9 +75,9 @@ with st.sidebar:
     ('Conversation','promt','Context','API'))
     
     if model == 'Context':
-        context = st.text_area('Context for the Model')
+        context = st.text_area('Context for the Model', placeholder="Input context", height=200)
         enter_button_disabled = not bool(context.strip())
-        enter_button = st.button('Enter', disabled=enter_button_disabled)
+        enter_button = st.button('Add Context', disabled=enter_button_disabled)
 
 # Check if the selected model is different from the previously selected one
 if st.session_state.get("selected_model") != model:
